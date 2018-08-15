@@ -111,7 +111,13 @@ def main():  # type: () -> None
     # [analyze]
 
     # [repair]
-
+    cmd = subparsers.add_parser('repair',
+        help='attempts to repair the source code for a given scenario.')
+    cmd.add_argument('filename',
+                     help="the path to the scenario configuration file.")
+    add_mission_options(cmd)
+    add_debug_option(cmd)
+    cmd.set_defaults(func=cmd_repair)
 
     log_to_stdout_formatter = logging.Formatter(
         '%(asctime)s:%(levelname)s: %(message)s',
