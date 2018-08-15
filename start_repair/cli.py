@@ -4,7 +4,6 @@ import logging
 
 from start_core.scenario import Scenario
 from start_core.exceptions import STARTException
-from start_image.name import name as name_image
 
 from .snapshot import Snapshot
 
@@ -19,7 +18,7 @@ START [Repair]
 
 # type: (str) -> Scenario
 def load_scenario(filename):
-    logger.info("loading scenario from file [%s]", args.filename)
+    logger.info("loading scenario from file [%s]", filename)
     scenario = Scenario.from_file(filename)
     logger.info("loaded scenario [%s] from file", scenario.name)
     return scenario
@@ -72,6 +71,9 @@ def cmd_validate(args):
                               speedup=args.speedup,
                               check_waypoints=True,  # FIXME
                               use_oracle_workaround=False)  # FIXME
+
+    for test in snapshot.tests:
+        logger.info("- executing test: %s", test.name)
     logger.info("validated scenario")
 
 
