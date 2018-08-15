@@ -109,6 +109,12 @@ def main():  # type: () -> None
     cmd.set_defaults(func=cmd_localize)
 
     # [analyze]
+    cmd = subparsers.add_parser('analyze',
+        help='performs static analysis of a given scenario.')
+    cmd.add_argument('filename',
+                     help="the path to the scenario configuration file.")
+    add_debug_option(cmd)
+    cmd.set_defaults(func=cmd_analyze)
 
     # [repair]
     cmd = subparsers.add_parser('repair',
