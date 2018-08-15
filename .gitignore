@@ -1,0 +1,8 @@
+Pipfile
+
+*.pyc
+*.pyo
+
+*.tmp
+*.swp
+*.swo
