@@ -4,6 +4,7 @@ import logging
 import json
 
 from bugzoo.manager import BugZoo
+from start_core.exceptions import UnexpectedTestOutcome  # FIXME implement
 
 logger = logging.getLogger(__name__)  # type: logging.Logger
 logger.setLevel(logging.DEBUG)
@@ -19,7 +20,15 @@ def coverage(snapshot, fn_out='coverage.json'):
         coverage = bz.containers.coverage(container)
         logger.info("computed coverage")
 
-        # FIXME sanity check coverage!
+        for test in snapshot.tests:
+            actual_outcome = coverage[test].outcome.passed
+            expected_outcome = test.expected_outcome
+            if actual_outcome != expected_outcome:
+                msg = "unexpected test outcome when computing coverage for test [%s]: ('%s' should be '%s')."
+                msg = msg.format(test.name,
+                                 'PASS' if actual_outcome else 'FAIL',
+                                 'PASS' if expected_outcome else 'FAIL')
+                raise UnexpectedTestOutcome(msg)
 
         jsn = coverage.to_dict()
         logger.info("saving coverage to disk: %s", fn_out)
