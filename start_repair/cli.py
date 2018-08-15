@@ -100,6 +100,13 @@ def main():  # type: () -> None
     cmd.set_defaults(func=cmd_validate)
 
     # [localize]
+    cmd = subparsers.add_parser('localize',
+        help='performs fault localization for a given scenario.')
+    cmd.add_argument('filename',
+                     help="the path to the scenario configuration file.")
+    add_mission_options(cmd)
+    add_debug_option(cmd)
+    cmd.set_defaults(func=cmd_localize)
 
     # [analyze]
 
