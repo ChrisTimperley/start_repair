@@ -8,7 +8,13 @@ setuptools.setup(
     author='Chris Timperley',
     author_email='christimperley@gmail.com',
     url='https://gitlab.eecs.umich.edu/ChrisTimperley/start-repair',
-    install_requires=['start_image', 'start_core'],
+    install_requires=[
+        'start_image',
+        'start_core',
+        'bugzoo',
+        'darjeeling'
+    ],
+    python_requires='>=3.5',
     packages=['start_repair'],
     entry_points = {
         'console_scripts': [ 'start-repair = start_repair.cli:main' ]
