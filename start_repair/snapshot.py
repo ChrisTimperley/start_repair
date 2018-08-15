@@ -8,18 +8,14 @@ from bugzoo.compiler import WafCompiler
 
 
 class Snapshot(BugZooSnapshot):
-    # type: (str, int, int, float, bool, bool) -> Snapshot
+    # type: (Scenario, int, int, float, bool, bool) -> Snapshot
     @staticmethod
-    def build(filename,
+    def build(scenario,
               timeout_mission,
               timeout_liveness,
               speedup,
               check_waypoints,
               use_oracle_workaround):
-        logger.info("loading scenario from file [%s]", args.filename)
-        scenario = Scenario.from_file(filename)
-        logger.info("loaded scenario [%s]", scenario.name)
-
         logger.debug("constructing test suite")
         logger.debug("computing test command")
         cmd_test = 'python test.py test __ID__ --speedup {} --time-limit {} --liveness-timeout {}'

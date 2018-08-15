@@ -66,7 +66,7 @@ def cmd_repair(args):
 def cmd_validate(args):
     scenario = load_scenario(args.filename)
     logger.info("validating scenario")
-    snapshot = Snapshot.build(filename=scenario,
+    snapshot = Snapshot.build(scenario=scenario,
                               timeout_mission=args.timeout,
                               timeout_liveness=args.timeout_liveness,
                               speedup=args.speedup,
