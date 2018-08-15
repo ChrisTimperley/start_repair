@@ -1,10 +1,16 @@
 __all__ = ['Snapshot']
 
+import logging
+
 from start_core.scenario import Scenario
+from start_image.name import name as name_image
 from bugzoo.core.bug import Bug as BugZooSnapshot
 from bugzoo.core.language import Language
 from bugzoo.core.test import TestSuite
 from bugzoo.compiler import WafCompiler
+
+logger = logging.getLogger(__name__)  # type: logging.Logger
+logger.setLevel(logging.DEBUG)
 
 
 class Snapshot(BugZooSnapshot):
