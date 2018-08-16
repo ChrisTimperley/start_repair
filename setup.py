@@ -15,8 +15,5 @@ setuptools.setup(
         'darjeeling'
     ],
     python_requires='>=3.5',
-    packages=['start_repair'],
-    entry_points = {
-        'console_scripts': [ 'start-repair = start_repair.cli:main' ]
-    }
+    packages=['start_repair']
 )
