@@ -9,8 +9,8 @@ setuptools.setup(
     author_email='christimperley@gmail.com',
     url='https://gitlab.eecs.umich.edu/ChrisTimperley/start-repair',
     install_requires=[
-        'start_image',
-        'start_core',
+        'start-image',
+        'start-core',
         'bugzoo',
         'darjeeling'
     ],
