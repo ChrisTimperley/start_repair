@@ -26,7 +26,7 @@ class Snapshot(BugZooSnapshot):
               ):                        # type: (...) -> Snapshot
         logger.debug("constructing test suite")
         logger.debug("computing test command")
-        cmd_test = 'start-cli execute scenario.config'
+        cmd_test = 'start-cli --debug execute scenario.config'
         cmd_test += ' --speedup {}'.format(speedup)
         cmd_test += ' --timeout-connection {}'.format(timeout_connection)
         cmd_test += ' --time-limit {}'.format(timeout_mission)
