@@ -24,24 +24,28 @@ class Snapshot(BugZooSnapshot):
               use_oracle_workaround):
         logger.debug("constructing test suite")
         logger.debug("computing test command")
-        cmd_test = 'python test.py test __ID__ --speedup {} --time-limit {} --liveness-timeout {}'
+        cmd_test = 'start-cli execute scenario.config'
+        cmd_test += ' --speedup {} --time-limit {} --liveness-timeout {}'
         cmd_test = cmd_test.format(speedup, timeout_mission, timeout_liveness)
         if check_waypoints:
             cmd_test += ' --check-wps'
         if not use_oracle_workaround:
             cmd_test += ' --no-workaround'
-        logger.debug("computed test command: %s", cmd_test)
+        logger.debug("computed base test command: %s", cmd_test)
 
-        def build_test(name, should_pass):
+        def build_test(name, use_attack):
+            command = cmd_test
+            if use_attack:
+                command += ' --attack'
             return {'name': name,
-                    'command': cmd_test.replace('__ID__', name),
-                    'expected-outcome': should_pass,
+                    'command': command,
+                    'expected-outcome': not use_attack,
                     'kill-after': 15,
                     'time-limit': timeout_mission + 30}
         jsn_test_suite = {
             'context': '/opt/ardupilot',
-            'tests': [build_test('p1', True),
-                      build_test('n1', False)]}
+            'tests': [build_test('p1', False),
+                      build_test('n1', True)]}
         test_suite = TestSuite.from_dict(jsn_test_suite)
         logger.debug("constructed test suite")
 
