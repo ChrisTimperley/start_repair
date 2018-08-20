@@ -21,7 +21,7 @@ def coverage(snapshot, fn_out='coverage.json'):
         logger.info("computed coverage")
 
         for test in snapshot.tests:
-            actual_outcome = coverage[test].outcome.passed
+            actual_outcome = coverage[test.name].outcome.passed
             expected_outcome = test.expected_outcome
             if actual_outcome != expected_outcome:
                 msg = "unexpected test outcome when computing coverage for test [%s]: ('%s' should be '%s')."
