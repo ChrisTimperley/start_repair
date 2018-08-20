@@ -30,7 +30,7 @@ class Snapshot(BugZooSnapshot):
         cmd_test += ' --speedup {}'.format(speedup)
         cmd_test += ' --timeout-connection {}'.format(timeout_connection)
         cmd_test += ' --time-limit {}'.format(timeout_mission)
-        cmd_test += '--liveness-timeout {}'.format(timeout_liveness)
+        cmd_test += ' --liveness-timeout {}'.format(timeout_liveness)
         if check_waypoints:
             cmd_test += ' --check-wps'
         if not use_oracle_workaround:
