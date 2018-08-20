@@ -16,17 +16,21 @@ logger.setLevel(logging.DEBUG)
 class Snapshot(BugZooSnapshot):
     # type: (Scenario, int, int, float, bool, bool) -> Snapshot
     @staticmethod
-    def build(scenario,
-              timeout_mission,
-              timeout_liveness,
-              speedup,
-              check_waypoints,
-              use_oracle_workaround):
+    def build(scenario,                 # type: Scenario
+              timeout_mission,          # type: int
+              timeout_liveness,         # type: int
+              timeout_connection,       # type: int
+              speedup,                  # type: int
+              check_waypoints,          # type: bool
+              use_oracle_workaround     # type: bool
+              ):                        # type: (...) -> Snapshot
         logger.debug("constructing test suite")
         logger.debug("computing test command")
         cmd_test = 'start-cli execute scenario.config'
-        cmd_test += ' --speedup {} --time-limit {} --liveness-timeout {}'
-        cmd_test = cmd_test.format(speedup, timeout_mission, timeout_liveness)
+        cmd_test += ' --speedup {}'.format(speedup)
+        cmd_test += ' --timeout-connection {}'.format(timeout_connection)
+        cmd_test += ' --time-limit {}'.format(timeout_mission)
+        cmd_test += '--liveness-timeout {}'.format(timeout_liveness)
         if check_waypoints:
             cmd_test += ' --check-wps'
         if not use_oracle_workaround:
