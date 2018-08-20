@@ -31,8 +31,8 @@ class Snapshot(BugZooSnapshot):
         cmd_test += ' --timeout-connection {}'.format(timeout_connection)
         cmd_test += ' --time-limit {}'.format(timeout_mission)
         cmd_test += ' --liveness-timeout {}'.format(timeout_liveness)
-        if check_waypoints:
-            cmd_test += ' --check-wps'
+        if not check_waypoints:
+            cmd_test += ' --no-check-wps'
         if not use_oracle_workaround:
             cmd_test += ' --no-workaround'
         logger.debug("computed base test command: %s", cmd_test)
