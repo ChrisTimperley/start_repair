@@ -2,13 +2,16 @@ __all__ = ['validate']
 
 import logging
 
+from bugzoo.core.bug import Bug as Snapshot
 from bugzoo.manager import BugZoo
 
 logger = logging.getLogger(__name__)  # type: logging.Logger
 logger.setLevel(logging.DEBUG)
 
 
-def validate(snapshot):
+def validate(snapshot,      # type: Snapshot
+             verbose=True   # type: bool
+             ):             # type: (...) -> None
     bz = BugZoo()
     bz.bugs.add(snapshot)
     container = None
@@ -16,7 +19,7 @@ def validate(snapshot):
         container = bz.containers.provision(snapshot)
         for test in snapshot.tests:
             logger.info("- executing test: %s [ACTUAL/EXPECTED]", test.name)
-            outcome = bz.containers.test(container, test)  # FIXME add verbose option
+            outcome = bz.containers.test(container, test, verbose=True)  # FIXME toggle verbose
             s_actual = "PASS" if outcome.passed else "FAIL"
             s_expected = "PASS" if test.expected_outcome else "FAIL"
             logger.info("- executed test: %s [%s/%s]",
