@@ -4,10 +4,22 @@ import logging
 import json
 
 from bugzoo.manager import BugZoo
-from start_core.exceptions import UnexpectedTestOutcome  # FIXME implement
+from bugzoo.core.coverage import TestSuiteCoverage
+from start_core.exceptions import UnexpectedTestOutcome
+from darjeeling.localization import Localization
 
 logger = logging.getLogger(__name__)  # type: logging.Logger
 logger.setLevel(logging.DEBUG)
+
+
+def metric(ep, np, ef, nf):
+    # type: (int, int, int, int) -> float
+    return 1.0 if ep == 0 and nf == 0 else 0.0
+
+
+def localize(coverage):
+    # type: (TestSuiteCoverage) -> Localization
+    return Localization.from_coverage(coverage, metric)
 
 
 def coverage(snapshot, fn_out='coverage.json'):
