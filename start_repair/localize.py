@@ -44,6 +44,8 @@ def coverage(snapshot, fn_out='coverage.json'):
 
         # restrict coverage to .cpp files
         covered_files = [fn for fn in coverage.lines.files if fn.endswith('.cpp')]
+        covered_files = [fn for fn in covered_files \
+                         if not fn.startswith('libraries/SITL')]
         coverage = coverage.restricted_to_files(covered_files)
 
         jsn = coverage.to_dict()
