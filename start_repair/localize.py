@@ -30,6 +30,10 @@ def coverage(snapshot, fn_out='coverage.json'):
                                  'PASS' if expected_outcome else 'FAIL')
                 raise UnexpectedTestOutcome(msg)
 
+        # restrict coverage to .cpp files
+        covered_files = [fn for fn in coverage.lines.files if fn.endswith('.cpp')]
+        coverage = coverage.restricted_to_files(covered_files)
+
         jsn = coverage.to_dict()
         logger.info("saving coverage to disk: %s", fn_out)
         with open(fn_out, 'w') as f:
