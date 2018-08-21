@@ -12,7 +12,8 @@ setuptools.setup(
         'start-image',
         'start-core',
         'bugzoo',
-        'darjeeling'
+        'darjeeling',
+        'kaskara'
     ],
     python_requires='>=3.5',
     packages=['start_repair']
