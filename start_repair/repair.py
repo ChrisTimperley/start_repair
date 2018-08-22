@@ -2,6 +2,7 @@
 from bugzoo.core.coverage import TestSuiteCoverage
 from bugzoo.manager import BugZoo
 from start_core.scenario import Scenario
+from darjeeling.localization import Localization
 from darjeeling.problem import Problem
 from darjeeling.snippet import SnippetDatabase
 from darjeeling.transformation import find_all as find_all_transformations
@@ -33,38 +34,22 @@ def transformations(snapshot,   # type: Snapshot
     return transformations
 
 
-def repair(scenario,            # type: Scenario
+def repair(snapshot,            # type: Snapshot
+           localization,        # type: Localization
            coverage,            # type: TestSuiteCoverage
            analysis,            # type: Analysis
-           snippets,            # type: SnippetDatabase
+           transformations,     # type: List[Transformation]
            threads,             # type: int
            candidate_limit,     # type: Optional[int]
            time_limit_mins      # type: Optional[float]
            ):                   # type: (...) -> None
     client_bugzoo = BugZoo()
     client_bugzoo.bugs.add(snapshot)
+    problem = Problem(bugzoo, snapshot, coverage, analysis=analysis)
 
-    localization = localize(coverage)
-    snapshot = Snapshot.build(scenario,
-                              timeout_mission,
-                              timeout_liveness,
-                              timeout_connection,
-                              speedup,
-                              check_waypoints,
-                              use_oracle_workaround)
-    problem = Problem(bugzoo,
-                      snapshot,
-                      coverage,
-                      analysis=analysis)
-
-    # generate the search space
-    # FIXME load from file or generate from scratch
-    transformations = "TODO"
-    candidates = all_single_edit_patches(transformations)
-
-    # repair
     time_limit = None
-    search = Searcher(bugzoo=bz,
+    candidates = all_single_edit_patches(transformations)
+    search = Searcher(bugzoo=client_bugzoo,
                       problem=problem,
                       candidates=candidates,
                       threads=threads,
