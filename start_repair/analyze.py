@@ -15,7 +15,7 @@ def analyze(snapshot):  # type: (Snapshot) -> Analysis
     client_bugzoo.bugs.add(snapshot)
 
     # FIXME fetch a list of files
-    files = ['/opt/ardupilot/APMrover2/mode.cpp']
+    files = ['/opt/ardupilot/libraries/GCS_MAVLink/GCS_Param.cpp']
 
     logger.debug("performing analysis of snapshot: %s", snapshot)
     analysis = Analysis.build(client_bugzoo, snapshot, files)
