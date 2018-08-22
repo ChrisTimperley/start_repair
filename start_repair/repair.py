@@ -1,9 +1,12 @@
-from bugzoo.core.fileline import FileLine
+
 from bugzoo.core.coverage import TestSuiteCoverage
 from bugzoo.manager import BugZoo
 from start_core.scenario import Scenario
+from darjeeling.problem import Problem
 from darjeeling.snippet import SnippetDatabase
-from darjeeling.transformation import find_all_transformations
+from darjeeling.transformation import find_all as find_all_transformations
+from darjeeling.transformation import Transformation, \
+                                      InsertStatement
 
 from .localize import localize
 from .snapshot import Snapshot
@@ -19,9 +22,14 @@ def transformations(snapshot,   # type: Snapshot
     Returns a list of all transformations for a given snapshot.
     """
     client_bugzoo = BugZoo()
+    client_bugzoo.bugs.add(snapshot)  # FIXME this is an annoying hack
     problem = Problem(client_bugzoo, snapshot, coverage, analysis=analysis)
-    schemas = []
-    transformations = list(find_all_transformations(problem, snippets, schemas))
+    schemas = [InsertStatement]
+    lines = list(coverage.failing.lines)
+    transformations = list(find_all_transformations(problem,
+                                                    lines,
+                                                    snippets,
+                                                    schemas))
     return transformations
 
 
@@ -33,6 +41,9 @@ def repair(scenario,            # type: Scenario
            candidate_limit,     # type: Optional[int]
            time_limit_mins      # type: Optional[float]
            ):                   # type: (...) -> None
+    client_bugzoo = BugZoo()
+    client_bugzoo.bugs.add(snapshot)
+
     localization = localize(coverage)
     snapshot = Snapshot.build(scenario,
                               timeout_mission,
@@ -47,13 +58,8 @@ def repair(scenario,            # type: Scenario
                       analysis=analysis)
 
     # generate the search space
-    schemes = []
-    transformations = sample_by_localization_and_type(problem,
-                                                      snippets,
-                                                      localization,
-                                                      schemas,
-                                                      threads=threads,
-                                                      eager=True)
+    # FIXME load from file or generate from scratch
+    transformations = "TODO"
     candidates = all_single_edit_patches(transformations)
 
     # repair
