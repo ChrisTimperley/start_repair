@@ -1,9 +1,28 @@
+from bugzoo.core.fileline import FileLine
 from bugzoo.core.coverage import TestSuiteCoverage
+from bugzoo.manager import BugZoo
 from start_core.scenario import Scenario
 from darjeeling.snippet import SnippetDatabase
+from darjeeling.transformation import find_all_transformations
 
 from .localize import localize
 from .snapshot import Snapshot
+from .analyze import Analysis
+
+
+def transformations(snapshot,   # type: Snapshot
+                    coverage,   # type: TestSuiteCoverage
+                    snippets,   # type: SnippetDatabase
+                    analysis    # type: Analysis
+                    ):          # type: (...) -> List[Transformation]
+    """
+    Returns a list of all transformations for a given snapshot.
+    """
+    client_bugzoo = BugZoo()
+    problem = Problem(client_bugzoo, snapshot, coverage, analysis=analysis)
+    schemas = []
+    transformations = list(find_all_transformations(problem, snippets, schemas))
+    return transformations
 
 
 def repair(scenario,            # type: Scenario
