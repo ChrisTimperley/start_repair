@@ -22,7 +22,8 @@ def localize(coverage):
     return Localization.from_coverage(coverage, metric)
 
 
-def coverage(snapshot, fn_out='coverage.json'):
+def compute_coverage(snapshot):
+    # type: (Snapshot) -> TestSuiteCoverage
     bz = BugZoo()
     bz.bugs.add(snapshot)
     container = None
@@ -47,12 +48,6 @@ def coverage(snapshot, fn_out='coverage.json'):
         covered_files = [fn for fn in covered_files \
                          if not fn.startswith('libraries/SITL')]
         coverage = coverage.restricted_to_files(covered_files)
-
-        jsn = coverage.to_dict()
-        logger.info("saving coverage to disk: %s", fn_out)
-        with open(fn_out, 'w') as f:
-            json.dump(jsn, f)
-        logger.info("saved coverage to disk: %s", fn_out)
         return coverage
     finally:
         if container:
