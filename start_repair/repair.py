@@ -3,6 +3,7 @@ __all__ = ['transformations', 'search']
 from datetime import timedelta
 import logging
 
+from bugzoo.core.fileline import FileLine
 from bugzoo.core.coverage import TestSuiteCoverage
 from bugzoo.manager import BugZoo
 from start_core.scenario import Scenario
@@ -11,8 +12,8 @@ from darjeeling.problem import Problem
 from darjeeling.snippet import SnippetDatabase
 from darjeeling.candidate import all_single_edit_patches
 from darjeeling.transformation import find_all as find_all_transformations
-from darjeeling.transformation import Transformation, \
-                                      InsertStatement
+import darjeeling.transformation
+from darjeeling.transformation import Transformation
 from darjeeling.searcher import Searcher
 
 from .localize import localize
@@ -23,19 +24,20 @@ logger = logging.getLogger(__name__)  # type: logging.Logger
 logger.setLevel(logging.DEBUG)
 
 
-def transformations(snapshot,   # type: Snapshot
-                    coverage,   # type: TestSuiteCoverage
-                    snippets,   # type: SnippetDatabase
-                    analysis    # type: Analysis
-                    ):          # type: (...) -> List[Transformation]
+def transformations(snapshot,       # type: Snapshot
+                    coverage,       # type: TestSuiteCoverage
+                    localization,   # type: Localization
+                    snippets,       # type: SnippetDatabase
+                    analysis        # type: Analysis
+                    ):              # type: (...) -> List[Transformation]
     """
     Returns a list of all transformations for a given snapshot.
     """
     client_bugzoo = BugZoo()
     client_bugzoo.bugs.add(snapshot)  # FIXME this is an annoying hack
     problem = Problem(client_bugzoo, snapshot, coverage, analysis=analysis)
-    schemas = [InsertStatement]
-    lines = list(coverage.failing.lines)
+    schemas = [darjeeling.transformation.DeleteStatement]
+    lines = list(localization)  # type: List[FileLine]
     transformations = list(find_all_transformations(problem,
                                                     lines,
                                                     snippets,
