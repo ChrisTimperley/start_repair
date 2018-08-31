@@ -54,11 +54,19 @@ class Snapshot(BugZooSnapshot):
         logger.debug("constructed test suite")
         name_snapshot = "start:{}".format(scenario.name)
 
+        command_vehicle = {
+            'APMrover2': 'rover',
+            'ArduCopter': 'copter',
+            'ArduPlane': 'plane'
+        }[scenario.mission.vehicle]
+
         ldflags = "--coverage"
         cxxflags= "--coverage -Wno-error=maybe-uninitialized -save-temps=obj"
-        cmdi = "./waf configure --no-submodule-update LDFLAGS='{}' CXXFLAGS='{}' && ./waf build"
+        configure = "./waf configure --no-submodule-update LDFLAGS='{}' CXXFLAGS='{}'"
+        configure = configure.format(ldflags, cxxflags)
+        cmdi =  "{} && ./waf {}".format(configure, command_vehicle)
         cmdi = cmdi.format(ldflags, cxxflags)
-        compiler = SimpleCompiler(command='./waf build',
+        compiler = SimpleCompiler(command='./waf {}'.format(command_vehicle),
                                   command_clean='./waf clean',
                                   command_with_instrumentation=cmdi,
                                   context='/opt/ardupilot',
