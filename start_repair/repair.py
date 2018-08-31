@@ -36,7 +36,9 @@ def transformations(snapshot,       # type: Snapshot
     client_bugzoo = BugZoo()
     client_bugzoo.bugs.add(snapshot)  # FIXME this is an annoying hack
     problem = Problem(client_bugzoo, snapshot, coverage, analysis=analysis)
-    schemas = [darjeeling.transformation.DeleteStatement]
+    schemas = [darjeeling.transformation.PrependStatement,
+               darjeeling.transformation.ReplaceStatement,
+               darjeeling.transformation.DeleteStatement]
     lines = list(localization)  # type: List[FileLine]
     transformations = list(find_all_transformations(problem,
                                                     lines,
