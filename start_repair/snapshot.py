@@ -7,7 +7,7 @@ from start_image.name import name as name_image
 from bugzoo.core.bug import Bug as BugZooSnapshot
 from bugzoo.core.language import Language
 from bugzoo.core.test import TestSuite
-from bugzoo.compiler import WafCompiler
+from bugzoo.compiler import SimpleCompiler
 
 logger = logging.getLogger(__name__)  # type: logging.Logger
 logger.setLevel(logging.DEBUG)
@@ -52,8 +52,18 @@ class Snapshot(BugZooSnapshot):
                       build_test('n1', True)]}
         test_suite = TestSuite.from_dict(jsn_test_suite)
         logger.debug("constructed test suite")
-
         name_snapshot = "start:{}".format(scenario.name)
+
+        ldflags = "--coverage"
+        cxxflags= "--coverage -Wno-error=maybe-uninitialized -save-temps=obj"
+        cmdi = "./waf configure LDFLAGS='{}' CXXFLAGS='{}' && ./waf build"
+        cmdi = cmdi.format(ldflags, cxxflags)
+        compiler = SimpleCompiler(command='./waf build',
+                                  command_clean='./waf clean',
+                                  command_with_instrumentation=cmdi,
+                                  context='/opt/ardupilot',
+                                  time_limit=300.0)
+
         snapshot = Snapshot(name=name_snapshot,
                             image=name_image(scenario),
                             dataset="start",
@@ -62,7 +72,7 @@ class Snapshot(BugZooSnapshot):
                             source_dir="/opt/ardupilot",
                             languages=[Language.CPP],
                             harness=test_suite,
-                            compiler=WafCompiler(time_limit=300.0),
+                            compiler=compiler,
                             files_to_instrument=[
                                 'APMrover2/APMrover2.cpp',
                                 'ArduCopter/ArduCopter.cpp',
