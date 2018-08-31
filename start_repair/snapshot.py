@@ -56,7 +56,7 @@ class Snapshot(BugZooSnapshot):
 
         ldflags = "--coverage"
         cxxflags= "--coverage -Wno-error=maybe-uninitialized -save-temps=obj"
-        cmdi = "./waf configure LDFLAGS='{}' CXXFLAGS='{}' && ./waf build"
+        cmdi = "./waf configure --no-submodule-update LDFLAGS='{}' CXXFLAGS='{}' && ./waf build"
         cmdi = cmdi.format(ldflags, cxxflags)
         compiler = SimpleCompiler(command='./waf build',
                                   command_clean='./waf clean',
