@@ -39,7 +39,7 @@ def compute_coverage(snapshot):
             actual_outcome = coverage[test.name].outcome.passed
             expected_outcome = test.expected_outcome
             logger.debug("outcome for test [%s]:\n%s",
-                         test.name, actual_outcome.response.output)
+                         test.name, coverage[test.name].outcome.response.output)
             if actual_outcome != expected_outcome:
                 msg = "unexpected test outcome when computing coverage for test [{}]: ('{}' should be '{}')."
                 msg = msg.format(test.name,
