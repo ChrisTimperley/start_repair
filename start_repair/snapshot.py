@@ -54,11 +54,13 @@ class Snapshot(BugZooSnapshot):
         logger.debug("constructed test suite")
         name_snapshot = "start:{}".format(scenario.name)
 
-        command_vehicle = {
-            'APMrover2': 'rover',
-            'ArduCopter': 'copter',
-            'ArduPlane': 'plane'
-        }[scenario.mission.vehicle]
+        # FIXME only build binary for vehicle being tested
+        # command_vehicle = {
+        #     'APMrover2': 'rover',
+        #     'ArduCopter': 'copter',
+        #     'ArduPlane': 'plane'
+        # }[scenario.mission.vehicle]
+        command_vehicle = 'build'
 
         ldflags = "--coverage"
         cxxflags= "--coverage -Wno-error=maybe-uninitialized -save-temps=obj"
