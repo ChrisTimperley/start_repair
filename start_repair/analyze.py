@@ -16,6 +16,7 @@ def analyze(snapshot,   # type: Snapshot
     logger.debug("performing analysis of snapshot: %s", snapshot)
     client_bugzoo = BugZooClient()
     client_bugzoo.bugs.add(snapshot)
-    analysis = Analysis.build(client_bugzoo, snapshot, files)
+    analysis = Analysis.build(client_bugzoo, snapshot, files,
+                              ignore_exit_code=True)
     logger.debug("performed analysis of snapshot")
     return analysis
