@@ -7,7 +7,7 @@ from start_image.name import name as name_image
 from bugzoo.core.bug import Bug as BugZooSnapshot
 from bugzoo.core.language import Language
 from bugzoo.core.test import TestSuite
-from bugzoo.compiler import SimpleCompiler
+from bugzoo.compiler import SimpleCompiler, WafCompiler
 
 logger = logging.getLogger(__name__)  # type: logging.Logger
 logger.setLevel(logging.DEBUG)
@@ -73,6 +73,8 @@ class Snapshot(BugZooSnapshot):
                                   command_with_instrumentation=cmdi,
                                   context='/opt/ardupilot',
                                   time_limit=300.0)
+
+        compiler = WafCompiler(time_limit=300.0)
 
         snapshot = Snapshot(name=name_snapshot,
                             image=name_image(scenario),
