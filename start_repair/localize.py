@@ -24,6 +24,7 @@ def localize(coverage):
 
 def compute_coverage(snapshot):
     # type: (Snapshot) -> TestSuiteCoverage
+    logger.debug("computing coverage for snapshot: %s", snapshot.name)
     bz = BugZoo()
     bz.bugs.add(snapshot)
     container = None
@@ -34,8 +35,11 @@ def compute_coverage(snapshot):
         logger.info("computed coverage")
 
         for test in snapshot.tests:
+            logger.debug("obtaining coverage for test [%s]", test.name)
             actual_outcome = coverage[test.name].outcome.passed
             expected_outcome = test.expected_outcome
+            logger.debug("outcome for test [%s]:\n%s",
+                         test.name, actual_outcome.response.output)
             if actual_outcome != expected_outcome:
                 msg = "unexpected test outcome when computing coverage for test [{}]: ('{}' should be '{}')."
                 msg = msg.format(test.name,
@@ -48,6 +52,7 @@ def compute_coverage(snapshot):
         covered_files = [fn for fn in covered_files \
                          if not fn.startswith('libraries/SITL')]
         coverage = coverage.restricted_to_files(covered_files)
+        logger.debug("computed coverage for snapshot: %s", snapshot.name)
         return coverage
     finally:
         if container:
