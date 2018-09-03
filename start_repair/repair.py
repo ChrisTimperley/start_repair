@@ -15,6 +15,7 @@ from darjeeling.transformation import find_all as find_all_transformations
 import darjeeling.transformation
 from darjeeling.transformation import Transformation
 from darjeeling.searcher import Searcher
+from darjeeling.settings import Settings as RepairSettings
 
 from .localize import localize
 from .snapshot import Snapshot
@@ -28,16 +29,18 @@ def transformations(snapshot,       # type: Snapshot
                     coverage,       # type: TestSuiteCoverage
                     localization,   # type: Localization
                     snippets,       # type: SnippetDatabase
-                    analysis        # type: Analysis
+                    analysis,       # type: Analysis,
+                    settings        # type: RepairSettings
                     ):              # type: (...) -> List[Transformation]
     """
     Returns a list of all transformations for a given snapshot.
     """
     client_bugzoo = BugZoo()
     client_bugzoo.bugs.add(snapshot)  # FIXME this is an annoying hack
-    problem = Problem(client_bugzoo, snapshot, coverage, analysis=analysis)
-    schemas = [darjeeling.transformation.PrependStatement,
-               darjeeling.transformation.ReplaceStatement,
+    problem = Problem(client_bugzoo, snapshot, coverage, analysis=analysis,
+                      settings=settings)
+    schemas = [# darjeeling.transformation.PrependStatement,
+               # darjeeling.transformation.ReplaceStatement,
                darjeeling.transformation.DeleteStatement]
     lines = list(localization)  # type: List[FileLine]
     transformations = list(find_all_transformations(problem,
