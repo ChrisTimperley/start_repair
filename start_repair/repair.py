@@ -25,7 +25,8 @@ logger = logging.getLogger(__name__)  # type: logging.Logger
 logger.setLevel(logging.DEBUG)
 
 
-def transformations(snapshot,       # type: Snapshot
+def transformations(problem,        # type: Problem
+                    snapshot,       # type: Snapshot
                     coverage,       # type: TestSuiteCoverage
                     localization,   # type: Localization
                     snippets,       # type: SnippetDatabase
@@ -35,10 +36,6 @@ def transformations(snapshot,       # type: Snapshot
     """
     Returns a list of all transformations for a given snapshot.
     """
-    client_bugzoo = BugZoo()
-    client_bugzoo.bugs.add(snapshot)  # FIXME this is an annoying hack
-    problem = Problem(client_bugzoo, snapshot, coverage, analysis=analysis,
-                      settings=settings)
     schemas = [# darjeeling.transformation.PrependStatement,
                # darjeeling.transformation.ReplaceStatement,
                darjeeling.transformation.DeleteStatement]
@@ -50,7 +47,8 @@ def transformations(snapshot,       # type: Snapshot
     return transformations
 
 
-def search(snapshot,                # type: Snapshot
+def search(problem,                 # type: Problem
+           snapshot,                # type: Snapshot
            localization,            # type: Localization
            coverage,                # type: TestSuiteCoverage
            analysis,                # type: Analysis
@@ -59,10 +57,6 @@ def search(snapshot,                # type: Snapshot
            candidate_limit=None,    # type: Optional[int]
            time_limit_mins=None     # type: Optional[float]
            ):                       # type: (...) -> None
-    client_bugzoo = BugZoo()
-    client_bugzoo.bugs.add(snapshot)
-    problem = Problem(client_bugzoo, snapshot, coverage, analysis=analysis)
-
     if time_limit_mins:
         logger.debug("time limit for search process: %d minutes",
                      time_limit_mins)
@@ -77,7 +71,7 @@ def search(snapshot,                # type: Snapshot
         logger.debug("no candidate limit specified")
 
     candidates = all_single_edit_patches(transformations)
-    search = Searcher(bugzoo=client_bugzoo,
+    search = Searcher(bugzoo=problem.bugzoo,
                       problem=problem,
                       candidates=candidates,
                       threads=threads,
