@@ -22,11 +22,9 @@ def localize(coverage):
     return Localization.from_coverage(coverage, metric)
 
 
-def compute_coverage(snapshot):
-    # type: (Snapshot) -> TestSuiteCoverage
+def compute_coverage(snapshot, bz):
+    # type: (Snapshot, BugZoo) -> TestSuiteCoverage
     logger.debug("computing coverage for snapshot: %s", snapshot.name)
-    bz = BugZoo()
-    bz.bugs.add(snapshot)
     container = None
     try:
         container = bz.containers.provision(snapshot)
