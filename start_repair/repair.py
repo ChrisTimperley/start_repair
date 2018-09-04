@@ -70,6 +70,8 @@ def search(problem,                 # type: Problem
     else:
         logger.debug("no candidate limit specified")
 
+    # FIXME sample and randomize
+
     candidates = all_single_edit_patches(transformations)
     search = Searcher(bugzoo=problem.bugzoo,
                       problem=problem,
