@@ -37,7 +37,7 @@ def transformations(problem,        # type: Problem
     Returns a list of all transformations for a given snapshot.
     """
     schemas = [# darjeeling.transformation.PrependStatement,
-               # darjeeling.transformation.ReplaceStatement,
+               darjeeling.transformation.ReplaceStatement,
                darjeeling.transformation.DeleteStatement]
     lines = list(localization)  # type: List[FileLine]
     transformations = list(find_all_transformations(problem,
