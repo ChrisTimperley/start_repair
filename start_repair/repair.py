@@ -57,11 +57,10 @@ def sample(localization,    # type: Localization
             continue
 
         # prioritise deletion if ordering is enabled
-        if ordered:
-            if DeleteStatement in transformations_by_schema:
-                schema = DeleteStatement
-            else:
-                schema = random.choice(list(transformations_by_schema.keys()))
+        if ordered and DeleteStatement in transformations_by_schema:
+            schema = DeleteStatement
+        else:
+            schema = random.choice(list(transformations_by_schema.keys()))
 
         transformations = transformations_by_schema[schema]
         # logger.debug("generating transformation using %s at %s",
