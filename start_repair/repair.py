@@ -29,7 +29,9 @@ logger.setLevel(logging.DEBUG)
 
 
 def sample(localization,    # type: Localization
-           grouped          # type: Dict[FileLine, Dict[Type[Transformation], Transformation]]
+           grouped,         # type: Dict[FileLine, Dict[Type[Transformation], Transformation]]
+           *,
+           ordered=True     # type: bool
            ):               # type: (...) -> Iterator[Transformation]:
     while True:
         line = localization.sample()
@@ -54,11 +56,12 @@ def sample(localization,    # type: Localization
                 raise StopIteration
             continue
 
-        # prioritise deletion
-        if DeleteStatement in transformations_by_schema:
-            schema = DeleteStatement
-        else:
-            schema = random.choice(list(transformations_by_schema.keys()))
+        # prioritise deletion if ordering is enabled
+        if ordered:
+            if DeleteStatement in transformations_by_schema:
+                schema = DeleteStatement
+            else:
+                schema = random.choice(list(transformations_by_schema.keys()))
 
         transformations = transformations_by_schema[schema]
         # logger.debug("generating transformation using %s at %s",
@@ -90,7 +93,9 @@ def transformations(problem,        # type: Problem
                     localization,   # type: Localization
                     snippets,       # type: SnippetDatabase
                     analysis,       # type: Analysis,
-                    settings        # type: RepairSettings
+                    settings,       # type: RepairSettings
+                    *,
+                    ordered=True    # type: bool
                     ):              # type: (...) -> List[Transformation]
     """
     Returns a list of all transformations for a given snapshot.
@@ -115,7 +120,7 @@ def transformations(problem,        # type: Problem
             at_line[schema] = []
         at_line[schema].append(t)
 
-    transformations = list(sample(localization, grouped))
+    transformations = list(sample(localization, grouped, ordered=ordered))
     return transformations
 
 
